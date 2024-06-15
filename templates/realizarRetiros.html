@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" type="image/png">    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Retiros</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        .navbar-custom {
+            background-color: #98012E; /* Fondo del navbar */
+            padding: 0.05rem 1rem; /* Ajuste del padding */
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .navbar-nav .nav-link {
+            color: white; /* Color del texto */
+            font-weight: bold; /* Texto más grueso */
+        }
+
+        .navbar-custom .navbar-nav .nav-link:hover {
+            color: lightgray; /* Color del texto al pasar el cursor */
+        }
+
+        .navbar-nav {
+            text-align: center;
+            margin: auto;
+        }
+
+        .btn-primary-custom {
+            background-color: #721c24;
+            border-color: #721c24;
+            margin: 0 5px; /* Espacio entre botones */
+        }
+
+        .btn-danger-custom {
+            background-color: #98012E;
+            border-color: #98012E;
+            margin: 0 5px; /* Espacio entre botones */
+            color: white;
+        }
+
+        .red-text {
+            color: #721c24;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .header-image {
+            width: 115%;
+            height: 25vh;
+            object-fit: cover;
+            margin-left: -200px; 
+        }
+
+        .header-title {
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 6px; /* Ajusta el padding según necesites */
+            font-weight: bold;
+            font-size: 1.5em; /* Ajusta el tamaño del texto */
+            color: #98012E;
+        }
+
+        .header-title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .title-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            margin-left: 250px; /* Ajusta este valor según sea necesario */
+        }
+
+        .left-content,
+        .right-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            background-color: #98012E; 
+            color: white;
+            padding: 0.8px 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+            display: inline-block; 
+        }
+
+        .user-info span {
+            font-size: 20px; 
+            font-weight: normal;
+            
+        }
+
+        .user-info i {
+            margin-right: 5px;
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+        }
+
+        .logout-btn .btn {
+            margin-left: 10px;
+        }
+        
+        .home-icon {
+            position: absolute;
+            left: 10px; /* Ajusta la posición según necesites */
+            color: gray; /* Color del icono */
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 60vh;
+            object-fit: cover;
+        }
+        .carousel-item img {
+            width: 100%;
+            
+            height: auto; /* Asegura que la imagen mantenga su relación de aspecto */
+        }
+        .black-space {
+            background-color: black;
+            height: 20px; /* Ajusta este valor para cambiar la altura del espacio */
+        }
+        .home-icon:hover {
+            color: black; /* Color del icono al pasar el cursor */
+        }
+        .btn-red-custom {
+            background-color: #98012E;
+            border-color: #98012E;
+            color: white;
+            width: auto;
+            padding: 0.375rem 1rem; /* Ajusta el padding para hacer el botón más pequeño */
+            font-size: 0.875rem; /* Ajusta el tamaño del texto para hacer el botón más pequeño */
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Estilos para el mensaje emergente */
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            display: none;
+        }
+        .success-message {
+            background-color: #28a745; /* Verde */
+            color: white;
+        }
+        .error-message {
+            background-color: #dc3545; /* Rojo */
+            color: white;
+        }
+    </style>
+
+    <script>
+        // Función para mostrar el mensaje emergente
+        function showMessage(status, message) {
+            var messageBox = document.getElementById('message-box');
+            messageBox.className = 'message-box ' + status + '-message';
+            messageBox.innerHTML = '<p>' + message + '</p>' +
+                                   '<button onclick="closeMessage()">Regresar</button>';
+            messageBox.style.display = 'block';
+        }
+
+        // Función para cerrar el mensaje emergente
+        function closeMessage() {
+            var messageBox = document.getElementById('message-box');
+            messageBox.style.display = 'none';
+            // Limpiar campos del formulario
+            document.getElementById('cedula').value = '';
+            document.getElementById('numcuenta').value = '';
+            document.getElementById('monto').value = '';
+            document.getElementById('fecha').value = '';
+        }
+    </script>
+</head>
+<body>
+    <!-- Cabecera con imagen -->
+    <div class="text-center">
+        <img src="{{ url_for('static', filename='images/banner.png') }}" class="header-image" alt="Imagen de cabecera">
+    </div>
+
+    <!-- Título debajo de la imagen de cabecera -->
+    <div class="header-title">
+        <a href="operaciones.html" class="home-icon">
+            <i class="fas fa-home"></i>
+        </a>
+        <div class="title-container">
+            <span>BANCO WEB UDLA</span>
+        </div>
+        <div class="logout-btn">
+            <div class="user-info">
+                <i class="fas fa-user"></i>
+                <span>{{ user_name }}</span>
+            </div>
+            <a href="/logout" class="btn btn-danger-custom">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        </div>
+    </div>
+
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+        <a class="navbar-brand" href="#"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto"> 
+                <li class="nav-item">
+                    <a class="nav-link" href="realizarRetiros.html">Retiro</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="realizarDeposito.html">Deposito</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="text-center mb-4">Información del Retiro</h2>
+                <form id="retiro-form">
+                    <div class="form-group">
+                        <label for="cedula">Cédula del Cliente:</label>
+                        <input type="text" class="form-control" id="cedula" name="cedula" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="numcuenta">Número de Cuenta:</label>
+                        <input type="text" class="form-control" id="numcuenta" name="numcuenta" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="monto">Monto a Retirar:</label>
+                        <input type="number" class="form-control" id="monto" name="monto" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha">Fecha:</label>
+                        <input type="date" class="form-control" id="fecha" name="fecha" required>
+                    </div>
+                    <button type="button" class="btn btn-red-custom" onclick="realizarRetiro()">Retirar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensaje emergente -->
+    <div id="message-box" class="message-box"></div>
+
+  
+</body>
+<footer class="container mt-5 text-center">
+    <div class="enlaces mb-3">
+        <a href="#" class="mr-3">Política de Privacidad</a>
+        <a href="#" class="mr-3">Términos de Servicio</a>
+        <a href="#">Contacto</a>
+    </div>
+    <p class="text-muted">&copy; 2024 BANCO WEB UDLA. Todos los derechos reservados.</p>
+</footer>
+</html>
+
+<script>
+    // Función para enviar el formulario de retiro
+    function realizarRetiro() {
+        var cedula = document.getElementById('cedula').value;
+        var numcuenta = document.getElementById('numcuenta').value;
+        var monto = document.getElementById('monto').value;
+        var fecha = document.getElementById('fecha').value;
+
+        // Enviar solicitud al servidor
+        fetch('/procesar_retiro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `cedula=${cedula}&numcuenta=${numcuenta}&monto=${monto}&fecha=${fecha}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showMessage('success', data.message);
+            } else {
+                showMessage('error', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>

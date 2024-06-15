@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" type="image/png">    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Análisis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .navbar-custom {
+            background-color: #98012E;
+            padding: 0.05rem 1rem;
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .navbar-nav .nav-link {
+            color: white;
+            font-weight: bold;
+        }
+
+        .navbar-custom .navbar-nav .nav-link:hover {
+            color: lightgray;
+        }
+
+        .navbar-nav {
+            text-align: center;
+            margin: auto;
+        }
+
+        .btn-primary-custom {
+            background-color: #721c24;
+            border-color: #721c24;
+            margin: 0 5px;
+        }
+
+        .btn-danger-custom {
+            background-color: #98012E;
+            border-color: #98012E;
+            margin: 0 5px;
+            color: white;
+        }
+
+        .red-text {
+            color: #721c24;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .header-image {
+            width: 115%;
+            height: 25vh;
+            object-fit: cover;
+            margin-left: -200px; 
+        }
+
+        .header-title {
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 6px;
+            font-weight: bold;
+            font-size: 1.5em;
+            color: #98012E;
+        }
+
+        .header-title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .title-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            margin-left: 250px;
+        }
+
+        .left-content,
+        .right-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            background-color: #98012E; 
+            color: white;
+            padding: 0.8px 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+            display: inline-block; 
+        }
+
+        .user-info span {
+            font-size: 20px; 
+            font-weight: normal;
+        }
+
+        .user-info i {
+            margin-right: 5px;
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+        }
+
+        .logout-btn .btn {
+            margin-left: 10px;
+        }
+        
+        .home-icon {
+            position: absolute;
+            left: 10px;
+            color: gray;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: auto;
+        }
+
+        .black-space {
+            background-color: black;
+            height: 20px;
+        }
+
+        .home-icon:hover {
+            color: black;
+        }
+
+        .btn-red-custom {
+            background-color: #98012E;
+            border-color: #98012E;
+            color: white;
+            width: auto;
+            padding: 0.375rem 1rem;
+            font-size: 0.875rem;
+            display: block;
+            margin: 0 auto;
+        }
+
+        #graficoGastos {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="text-center">
+        <img src="{{ url_for('static', filename='images/banner.png') }}" class="header-image" alt="Imagen de cabecera">
+    </div>
+    <div class="header-title">
+        <a href="operaciones.html" class="home-icon">
+            <i class="fas fa-home"></i>
+        </a>
+        <div class="title-container">
+            <span>BANCO WEB UDLA</span>
+        </div>
+        <div class="logout-btn">
+            <div class="user-info">
+                <i class="fas fa-user"></i>
+                <span>{{ user_name }}</span>
+            </div>
+            <a href="/logout" class="btn btn-danger-custom">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+        <a class="navbar-brand" href="#"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto">
+               
+                <li class="nav-item">
+                    <a class="nav-link" href="realizarTransferencias.html">Transferencia</a>
+                </li>
+                <
+                <li class="nav-item">
+                    <a class="nav-link" href="analisis.html">Evaluar Status</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="analisis2.html">Analisis Anual</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <section id="gastos" class="container mt-4">
+        <h2 class="text-center">Ingresa tus Datos Financieros Mensuales</h2>
+        <form id="gastosForm" class="mt-3">
+            <div class="form-group">
+                <label for="sueldo">Sueldo Mensual:</label>
+                <input type="number" id="sueldo" name="sueldo" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="vivienda">Vivienda:</label>
+                <input type="number" id="vivienda" name="vivienda" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="salud">Salud:</label>
+                <input type="number" id="salud" name="salud" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="alimentacion">Alimentación:</label>
+                <input type="number" id="alimentacion" name="alimentacion" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="transporte">Transporte:</label>
+                <input type="number" id="transporte" name="transporte" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="diversion">Diversión y Entretenimiento:</label>
+                <input type="number" id="diversion" name="diversion" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="ahorros">Ahorros:</label>
+                <input type="number" id="ahorros" name="ahorros" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-danger-custom">Calcular Gastos</button>
+        </form>
+    </section>
+    <section id="visualizacion" class="container mt-5">
+        <h2 class="text-center">Resumen de tus Gastos</h2>
+        <canvas id="graficoGastos" class="mt-4"></canvas>
+        <table id="tablaGastos" class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Categoría</th>
+                    <th>Gasto</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+    <section id="recomendaciones" class="container mt-5">
+        <h2 class="text-center">Recomendaciones Personalizadas</h2>
+    </section>
+    <footer class="container mt-5 text-center">
+        <div class="enlaces mb-3">
+            <a href="#" class="mr-3">Política de Privacidad</a>
+            <a href="#" class="mr-3">Términos de Servicio</a>
+            <a href="#">Contacto</a>
+        </div>
+        <p class="text-muted">&copy; 2024 BANCO WEB UDLA. Todos los derechos reservados.</p>
+    </footer>
+    <script>
+        document.getElementById('gastosForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const sueldo = parseFloat(document.getElementById('sueldo').value);
+            const vivienda = parseFloat(document.getElementById('vivienda').value) || 0;
+            const salud = parseFloat(document.getElementById('salud').value) || 0;
+            const alimentacion = parseFloat(document.getElementById('alimentacion').value) || 0;
+            const transporte = parseFloat(document.getElementById('transporte').value) || 0;
+            const diversion = parseFloat(document.getElementById('diversion').value) || 0;
+            const ahorros = parseFloat(document.getElementById('ahorros').value) || 0;
+
+            const data = {
+                sueldo: sueldo,
+                vivienda: vivienda,
+                salud: salud,
+                alimentacion: alimentacion,
+                transporte: transporte,
+                diversion: diversion,
+                ahorros: ahorros
+            };
+
+            fetch('/analisis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                const categorias = ['Vivienda', 'Salud', 'Alimentación', 'Transporte', 'Diversión', 'Ahorros'];
+                const gastos = [vivienda, salud, alimentacion, transporte, diversion, ahorros];
+                const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
+
+                const ctx = document.getElementById('graficoGastos').getContext('2d');
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: categorias,
+                        datasets: [{
+                            data: gastos,
+                            backgroundColor: colors
+                        }]
+                    }
+                });
+
+                const tbody = document.querySelector('#tablaGastos tbody');
+                tbody.innerHTML = '';
+                categorias.forEach((categoria, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${categoria}</td><td>${gastos[index].toFixed(2)}</td>`;
+                    tbody.appendChild(row);
+                });
+
+                const recomendaciones = document.getElementById('recomendaciones');
+                recomendaciones.innerHTML = '<h2 class="text-center">Recomendaciones Personalizadas</h2>';
+                recomendaciones.innerHTML += `<p>${result.recomendaciones}</p>`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

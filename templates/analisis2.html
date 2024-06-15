@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Proyección de Ingresos y Gastos</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Proyección de Ingresos y Gastos</h1>
+        <form id="projectionForm">
+            <div class="form-group">
+                <label for="sueldo">Sueldo Mensual:</label>
+                <input type="number" class="form-control" id="sueldo" required>
+            </div>
+            <div class="form-group">
+                <label for="vivienda">Gastos en Vivienda:</label>
+                <input type="number" class="form-control" id="vivienda" required>
+            </div>
+            <div class="form-group">
+                <label for="salud">Gastos en Salud:</label>
+                <input type="number" class="form-control" id="salud" required>
+            </div>
+            <div class="form-group">
+                <label for="alimentacion">Gastos en Alimentación:</label>
+                <input type="number" class="form-control" id="alimentacion" required>
+            </div>
+            <div class="form-group">
+                <label for="transporte">Gastos en Transporte:</label>
+                <input type="number" class="form-control" id="transporte" required>
+            </div>
+            <div class="form-group">
+                <label for="diversion">Gastos en Diversión:</label>
+                <input type="number" class="form-control" id="diversion" required>
+            </div>
+            <div class="form-group">
+                <label for="esporadicos">Gastos Esporádicos:</label>
+                <input type="number" class="form-control" id="esporadicos" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Calcular Proyección</button>
+        </form>
+        <div id="projectionResult" class="mt-4"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#projectionForm').on('submit', function(event){
+                event.preventDefault();
+                const data = {
+                    sueldo: parseFloat($('#sueldo').val()),
+                    vivienda: parseFloat($('#vivienda').val()),
+                    salud: parseFloat($('#salud').val()),
+                    alimentacion: parseFloat($('#alimentacion').val()),
+                    transporte: parseFloat($('#transporte').val()),
+                    diversion: parseFloat($('#diversion').val()),
+                    esporadicos: parseFloat($('#esporadicos').val())
+                };
+
+                $.ajax({
+                    url: '/proyeccion',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(response) {
+                        let resultDiv = $('#projectionResult');
+                        resultDiv.html('<h3>Proyección Mensual</h3>');
+                        let table = '<table class="table table-bordered"><thead><tr><th>Mes</th><th>Ingreso</th><th>Gastos</th><th>Saldo</th></tr></thead><tbody>';
+                        response.proyeccion_mensual.forEach(row => {
+                            table += `<tr><td>${row.mes}</td><td>${row.ingreso.toFixed(2)}</td><td>${row.gastos.toFixed(2)}</td><td>${row.saldo.toFixed(2)}</td></tr>`;
+                        });
+                        table += `<tr><th>Total</th><th>${response.totales.total_ingresos.toFixed(2)}</th><th>${response.totales.total_gastos.toFixed(2)}</th><th>${response.totales.total_saldo.toFixed(2)}</th></tr>`;
+                        table += '</tbody></table>';
+                        resultDiv.html(table);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

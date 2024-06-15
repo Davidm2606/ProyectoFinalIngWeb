@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BancoWeb Udla</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <link rel="icon" type="image/png" href="Imagenes/logo.png" sizes="64x64">
+   
+    <style>
+        body {
+            background-color: #f8f9fa;
+            background-image: url('https://www.udla.edu.ec/internacional/wp-content/uploads/2021/02/conoce-la-udla.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            max-width: 400px;
+            margin-top: 100px;
+            background-color: rgba(0, 0, 0, 0.7); 
+            padding: 20px;
+            border-radius: 10px;
+            align-content: center;
+            line-height: 1.5; 
+        }
+
+        h2 {
+            color: #98012E;
+            text-align: center;
+        }
+
+        label {
+            color: white;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        button {
+            background-color: rgb(133, 45, 45);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 0 auto;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>BANCOWEB UDLA</h2>
+        <br>
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+        <form method="post" action="{{ url_for('login') }}">
+            <label for="usuario">Username:</label>
+            <input type="text" name="usuario" id="usuario" required>
+            <br>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+            <br>
+            <br>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>
